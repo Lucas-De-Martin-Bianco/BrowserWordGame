@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sidebar Example</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom styles for the sidebar */
+    #sidebar {
+      position: fixed;
+      top: 0;
+      right: -250px; /* Initially hidden */
+      width: 250px;
+      height: 100%;
+      background-color: #f8f9fa;
+      transition: all 0.3s;
+    }
+
+    #sidebar.active {
+      right: 0; /* Display when active */
+    }
+  </style>
+</head>
+<body>
+
+<!-- Button to toggle sidebar -->
+<button id="sidebarCollapse" class="btn btn-info">Toggle Sidebar</button>
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <h2>Sidebar</h2>
+  <ul class="list-unstyled components">
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+  </ul>
+</div>
+
+<!-- JavaScript for toggling sidebar -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get elements
+    var sidebar = document.getElementById("sidebar");
+    var toggleButton = document.getElementById("sidebarCollapse");
+
+    // Toggle sidebar on button click
+    toggleButton.addEventListener("click", function () {
+      if (sidebar.classList.contains("active")) {
+        sidebar.classList.remove("active");
+      } else {
+        sidebar.classList.add("active");
+      }
+    });
+  });
+</script>
+</body>
+</html>
