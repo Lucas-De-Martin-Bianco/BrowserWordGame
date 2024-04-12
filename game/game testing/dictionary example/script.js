@@ -6,6 +6,7 @@ const container = document.querySelector(".container"),
 let audio;
 
 function data(result, word) {
+    console.log(result, word)
   if (result.title) {
     infoText.innerHTML = `Oops ;) we can't find <span>"${word}"</span>.`;
   } else {
