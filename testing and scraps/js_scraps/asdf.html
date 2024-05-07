@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Range Input Value</title>
+</head>
+<body>
+
+<input type="range" value="5" min="1" max="15" oninput="this.nextElementSibling.value = this.value" id="fuseTime">
+<output>5</output>
+
+<script>
+const fuseTimeInput = document.getElementById('fuseTime');
+
+fuseTimeInput.addEventListener('input', function() {
+    console.log("Value:", fuseTimeInput.value);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button Visibility Control</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  #successButton {
+    display: none; /* Hide the success button by default */
+  }
+</style>
+</head>
+<body>
+
+<button id="controlButton" type="button" class="btn btn-primary">Toggle Success Button</button>
+
+<button id="successButton" type="button" class="btn btn-success">Success</button>
+
+<script>
+  // Get the button elements
+  const controlButton = document.getElementById('controlButton');
+  const successButton = document.getElementById('successButton');
+
+  // Add click event listener to the control button
+  controlButton.addEventListener('click', () => {
+    // Toggle the visibility of the success button
+    if (successButton.style.display === 'none') {
+      successButton.style.display = 'block'; // Show the button
+    } else {
+      successButton.style.display = 'none'; // Hide the button
+    }
+  });
+</script>
+
+</body>
+</html>

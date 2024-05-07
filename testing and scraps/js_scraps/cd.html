@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer</title>
+</head>
+<body>
+
+<button onclick="startTimer()">Start Timer</button>
+<button onclick="resetTimer()">Reset Timer</button>
+
+<script>
+let countdown;
+
+function startTimer() {
+    let seconds = 5;
+    countdown = setInterval(function() {
+        seconds--;
+        if (seconds >= 0) {
+            console.log(seconds);
+        } else {
+            clearInterval(countdown);
+            console.log("Time's up!");
+        }
+    }, 1000);
+}
+
+function resetTimer() {
+    clearInterval(countdown);
+    console.log("Timer reset!");
+}
+</script>
+
+</body>
+</html>
