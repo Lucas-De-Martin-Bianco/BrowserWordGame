@@ -88,7 +88,7 @@
 
       function resetTimer() {
           clearInterval(countdown); // Stop the current countdown
-          let seconds = parseFloat(fuseTimeInput.value) + 0.25; // Get the new value and add 0.5
+          let seconds = parseFloat(fuseTimeInput.value);
           countdown = setInterval(function() {
               seconds--;
               if (seconds >= 1) {
@@ -115,8 +115,9 @@
                       var explosion = new Audio('explosion.mp3');
                       explosion.play();
                       document.getElementById('bomb').src = 'bomb_explode.png';
-                      document.getElementById('randomLetters').style.display = 'none'
+                      document.getElementById('randomLetters').style.display = 'none';
                       document.getElementById("settingsbarCollapse").disabled = false;
+                      updateHighscoresHTML();
                       setTimeout(function() {
                           document.getElementById('bomb').src = 'bomb_ticking.png';
                           startButton.style.display = 'block';
