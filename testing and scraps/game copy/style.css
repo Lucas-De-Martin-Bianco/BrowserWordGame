@@ -1,4 +1,3 @@
-/* Your CSS styles here */
 #scoreboard {
   height: 100%;
   width: 250px;
@@ -9,7 +8,6 @@
   padding-top: 15px;
 }
 
-/* Custom styles for the sidebar */
 #settingsbar {
   position: fixed;
   top: 0;
@@ -25,8 +23,6 @@
 }
 
 #bomb { display: block; margin: auto; }
-#fuse { display: block; margin: auto; }
-#word { display: block; margin: auto; }
 
 .custom-width {
   width: 10%;
