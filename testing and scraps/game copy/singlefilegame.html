@@ -94,6 +94,12 @@
                     <option value="6">6</option>
                     <option value="9">9</option>
                 </select>
+
+                <label for="level_select">Difficulty</label>
+                <select class="form-select" id="level_select">
+                    <option value="1">Easy</option>
+                    <option value="2" selected>Hard</option>
+                </select>
             </div>
         </div>
     </div>
@@ -228,6 +234,7 @@
         }
 
         function generateRandomLetters() {
+            if (document.getElementById("level_select").value == 2) {
             // Array of all letters
             var letters = 'abcdefghijklmnopqrstuvwxyz';
             // Generate random indexes
@@ -238,6 +245,20 @@
             var letter2 = letters.charAt(index2);
             // Display random letters
             document.getElementById("randomLetters").innerHTML =letter1 + letter2;
+            } else {
+                var letters = 'abcdefghijklmnoprstuvwxyz'
+                var vowels = "aeiou"
+                var index1 = Math.floor(Math.random() * letters.length);
+                var index2 = Math.floor(Math.random() * vowels.length);
+                var letter1 = letters.charAt(index1);
+                var vowel2 = vowels.charAt(index2);
+                const e_taskorder = Math.random()
+                if (e_taskorder == 0) {
+                    document.getElementById("randomLetters").innerHTML =letter1 + vowel2;
+                } else {
+                    document.getElementById("randomLetters").innerHTML =vowel2 + letter1;
+                }
+            }
         }
         function checkForInclusion() {
             // Get the input word
