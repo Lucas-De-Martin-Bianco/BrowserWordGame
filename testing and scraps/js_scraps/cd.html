@@ -1,36 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Countdown Timer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Fourth Letter</title>
 </head>
 <body>
+    <label id="healthbar" style="position: fixed; top: 10px; left: 260px;font-size: 50px;">❤️x ?</label>
+    <button onclick="changeFourthLetter()">Change Fourth Letter</button>
 
-<button onclick="startTimer()">Start Timer</button>
-<button onclick="resetTimer()">Reset Timer</button>
-
-<script>
-let countdown;
-
-function startTimer() {
-    let seconds = 5;
-    countdown = setInterval(function() {
-        seconds--;
-        if (seconds >= 0) {
-            console.log(seconds);
-        } else {
-            clearInterval(countdown);
-            console.log("Time's up!");
+    <script>
+        function changeFourthLetter() {
+            // Get the label element by its id
+            var label = document.getElementById("healthbar");
+            
+            // Get the current text content of the label
+            var text = label.innerHTML;
+            
+            // Replace the fourth character with 'X'
+            var newText = text.substring(0, 4) + 'X' + text.substring(5);
+            
+            // Update the label's text content with the new text
+            label.innerHTML = newText;
         }
-    }, 1000);
-}
-
-function resetTimer() {
-    clearInterval(countdown);
-    console.log("Timer reset!");
-}
-</script>
-
+    </script>
 </body>
 </html>
