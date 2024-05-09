@@ -28,10 +28,8 @@ function checkForInclusion() {
         } else {
             new Audio('wronganswer.mp3').play();
         }
-        wordInput.value = '';
-    } else {
-        wordInput.value = '';
     }
+    wordInput.value = '';
 }
 //access the dictionary api
 //-small note the dictionary doesn't recognize slang or modern words
