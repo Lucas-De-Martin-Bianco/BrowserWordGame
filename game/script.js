@@ -1,9 +1,8 @@
-//Settingsbar
+//settingsbar
+//adds and removes active class
 document.addEventListener("DOMContentLoaded", function () {
-  // Get elements
   var settingsbar = document.getElementById("settingsbar");
-  var toggleSettingsbar = document.getElementById("settingsbarCollapse");
-  // Toggle settingsbar on button click
+  var toggleSettingsbar = document.getElementById("settingsbarToggle");
   toggleSettingsbar.addEventListener("click", function () {
       if (settingsbar.classList.contains("active")) {
           settingsbar.classList.remove("active");
@@ -13,75 +12,76 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// check for enter key and after check word
+//check input
+//check for enter key
 function handleKeyPress(event) {
     if (event.keyCode === 13) {
-        let wordInput = document.getElementById('wordInput');
         checkForInclusion();
     }
 }
-
-//check for if word includes task
-function checkWord() {
-    var word = document.getElementById('wordInput').value;
-    if (word.length > 0) {
-            document.getElementById('wordInput').value = '';
+//check if input contains "task" (the 2 random letters)
+function checkForInclusion() {
+    var word = document.getElementById("wordInput").value;
+    if (i_healthbar >= 1) { //because searching the word takes time and this delay can cause scoring to bug out
+        if (word.includes(document.getElementById("randomLetters").innerHTML)) {
             searching(word);
+        } else {
+            new Audio('wronganswer.mp3').play();
+        }
+        wordInput.value = '';
+    } else {
+        wordInput.value = '';
     }
 }
+//access the dictionary api
+//-small note the dictionary doesn't recognize slang or modern words
 function searching(word) {
     let url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
     fetch(url)
     .then((response) => response.json())
     .then((result) => checkingword(result,word))
 }
+//checks if the result is actually a word
 function checkingword(result,word) {
     if (result[0] && result[0].hasOwnProperty('word') && result[0].phonetics.length !== 0) {
         resetTimer()
         generateRandomLetters()
-        var wrongbuzzer = new Audio('coin_1.mp3');
-        wrongbuzzer.play();
+        new Audio('coin_1.mp3').play();
         document.getElementById("scorecount").textContent = parseInt(document.getElementById("scorecount").textContent) + 1
     } 
     else {
-        var wrongbuzzer = new Audio('wronganswer.mp3');
-        wrongbuzzer.play();
-        wordInput.value = '';
+        new Audio('wronganswer.mp3').play();
     }
-}
-function sethealthbar() {
-    var v_healthbar = document.getElementById("v_healthbar");
-    var v_healthbar_text = v_healthbar.innerHTML;
-    v_healthbar.innerHTML = v_healthbar_text.substring(0, 4) + i_healthbar + v_healthbar_text.substring(5);
 }
 
 //gameplay logic
 document.addEventListener('DOMContentLoaded', function() {
-    // Get the button elements
     const wordInput = document.getElementById('wordInput');
     const startButton = document.getElementById('startButton');
-    // Add click event listener to the start button
-    startButton.addEventListener('click', () => {
-        startButton.style.display = 'none';
+    startButton.addEventListener('click', () => { //waits for start button to be pressed
+        startButton.style.display = 'none'; //hides start button
         document.getElementById("scorecount").textContent = 0;
         generateRandomLetters()
-        document.getElementById('randomLetters').style.display = 'block';
-        i_healthbar = document.getElementById("life_select").value
+        document.getElementById('randomLetters').style.display = 'block'; //show task
+        i_healthbar = document.getElementById("life_select").value //set internal value for health
         sethealthbar();
-        document.getElementById('wordInput').disabled = false;
         wordInput.value = '';
         wordInput.focus();
         //disable settings menu
         if (settingsbar.classList.contains("active")) {
             settingsbar.classList.remove("active");
         }
-        document.getElementById("settingsbarCollapse").disabled = true;
-        wordInput.focus(); //focus the textinput
+        document.getElementById("settingsbarToggle").disabled = true;
         //change png
         document.getElementById('bomb').src = 'bomb_ticking.png';
-        resetTimer()
+        resetTimer() //start timer
     });
 });
+
+function sethealthbar() {
+    var v_healthbar = document.getElementById("v_healthbar");
+    v_healthbar.innerHTML = v_healthbar.innerHTML.substring(0,4) + i_healthbar
+}
 
 let countdown;
 const fuseTimeInput = document.getElementById('fuseTime');
@@ -90,14 +90,13 @@ function resetTimer() {
     clearInterval(countdown); // Stop the current countdown
     let seconds = parseFloat(fuseTimeInput.value);
     countdown = setInterval(function() {
-        seconds--;
+        seconds--;  //-1 each iteration
         if (seconds >= 1) {
             console.log(seconds);
         } else {
             if (i_healthbar > 1) {
                 i_healthbar = i_healthbar -1
-                var wrongbuzzer = new Audio('minecraft_hit_soundmp3converter.mp3');
-                wrongbuzzer.play();
+                new Audio('minecraft_hit_soundmp3converter.mp3').play();
                 sethealthbar()
                 generateRandomLetters()
                 resetTimer()
@@ -112,15 +111,15 @@ function resetTimer() {
                 document.getElementById('wordInput').value = '';
                 saveOrUpdateHighscores(document.getElementById("scorecount").textContent)
                 console.log("Score: ",document.getElementById("scorecount").textContent)
-                var explosion = new Audio('explosion.mp3');
-                explosion.play();
+                new Audio('explosion.mp3').play();
                 document.getElementById('bomb').src = 'bomb_explode.png';
                 document.getElementById('randomLetters').style.display = 'none';
-                document.getElementById("settingsbarCollapse").disabled = false;
-                updateHighscoresHTML();
+                document.getElementById("settingsbarToggle").disabled = false;
+                updateHighscoresList();
                 setTimeout(function() {
                     document.getElementById('bomb').src = 'bomb_ticking.png';
                     startButton.style.display = 'block';
+                    document.getElementById('wordInput').disabled = false;
                 }, 2000);
             }   
         }
@@ -129,15 +128,11 @@ function resetTimer() {
 
 function generateRandomLetters() {
     if (document.getElementById("level_select").value == 2) {
-    // Array of all letters
     var letters = 'abcdefghijklmnopqrstuvwxyz';
-    // Generate random indexes
     var index1 = Math.floor(Math.random() * letters.length);
     var index2 = Math.floor(Math.random() * letters.length);
-    // Get random letters
     var letter1 = letters.charAt(index1);
     var letter2 = letters.charAt(index2);
-    // Display random letters
     document.getElementById("randomLetters").innerHTML =letter1 + letter2;
     } else {
         var letters = 'abcdefghijklmnoprstuvwxyz'
@@ -154,65 +149,36 @@ function generateRandomLetters() {
         }
     }
 }
-function checkForInclusion() {
-    // Get the input word
-    var word = document.getElementById("wordInput").value;
-    if (word.includes(document.getElementById("randomLetters").innerHTML)) {
-        checkWord();
-    } else {
-        var wrongbuzzer = new Audio('wronganswer.mp3');
-        wrongbuzzer.play();
-        wordInput.value = '';
-    }
-}
 
-// Function to save highscores to local storage
-function saveHighscores(highscores) {
-    // Serialize the highscores data
-    var serializedHighscores = JSON.stringify(highscores);
-    // Save to local storage
-    localStorage.setItem('highscores', serializedHighscores);
+//save cache and update highscore-board
+function saveOrUpdateHighscores(newHighscores) {
+    var existingHighscores = getHighscores() || []; //avoid error on null value
+    var updatedHighscores = existingHighscores.concat(newHighscores);
+    updatedHighscores.sort((a, b) => b - a); //sort descending order
+    updatedHighscores = updatedHighscores.slice(0, 5); //take only top 5
+    saveHighscores(updatedHighscores);
 }
-// Function to retrieve highscores from local storage
 function getHighscores() {
-    // Retrieve highscores data from local storage
     var savedHighscores = localStorage.getItem('highscores');
-    // Deserialize the highscores data
     var highscores = JSON.parse(savedHighscores);
-    // Return the highscores
     return highscores;
 }
-// Function to update the highscores list in the HTML
-function updateHighscoresHTML() {
-    // Retrieve highscores from local storage
+function saveHighscores(highscores) {
+    var serializedHighscores = JSON.stringify(highscores);
+    localStorage.setItem('highscores', serializedHighscores);
+}
+function updateHighscoresList() {
     var highscores = getHighscores() || [];
-    // Select the <ul> element to populate with highscores
     var highscoreList = document.getElementById('highscoreList');
-    // Clear existing content
     highscoreList.innerHTML = '';
-    // Loop through highscores and add them to the list
+    //--with help from chat-gpt--
     highscores.forEach(function(score, index) {
-        // Create a new list item element
         var listItem = document.createElement('li');
-        listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-        // Set the content of the list item
+        listItem.classList.add('list-group-item');
         listItem.textContent = `Streak: ${score}`;
-        // Append the list item to the highscore list
         highscoreList.appendChild(listItem);
+    //--with help from chat-gpt--
     });
 }
-function saveOrUpdateHighscores(newHighscores) {
-  // Retrieve existing highscores from local storage
-  var existingHighscores = getHighscores() || [];
-  // Combine existing highscores with the new ones
-  var updatedHighscores = existingHighscores.concat(newHighscores);
-  // Sort the highscores in descending order
-  updatedHighscores.sort((a, b) => b - a);
-  // Take only the top 5 highscores
-  updatedHighscores = updatedHighscores.slice(0, 5);
-  // Save updated highscores to local storage
-  saveHighscores(updatedHighscores);
-}
-
-// Initial update of highscores list when the page loads
-updateHighscoresHTML();
+// update on page load
+updateHighscoresList();

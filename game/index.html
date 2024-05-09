@@ -6,61 +6,61 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <body>
-    <button id="settingsbarCollapse" class="btn btn-info" style="position: fixed; top: 10px; right: 260px">Settings</button>
-    <Label id="v_healthbar" style="position: fixed; top: 10px; left: 260px;font-size: 50px;">❤️x ?</Label>
+    <!-- buttons independent form other stuff -->
+    <button id="settingsbarToggle" class="btn btn-info">Settings</button>
+    <label id="v_healthbar" style="position: fixed; top: 10px; left: 260px;font-size: 50px;">❤️x ?</label>
     
-    <div class="container-fluid">
-
-        <div class="row">
-            <!-- Scoreboard -->
-            <div class="col-3 sidebar" id="scoreboard">
-                <h2>Highscores</h2>
-                <ul class="list-group" id="highscoreList">
-                  <!-- Highscore items will be dynamically added here -->
-                </ul>
-              </div>
-          
-            <!-- Main Content -->
-            <div class="col" style="margin-top: 20vh;">
-                <div style="position: relative;">
-                    <img id="bomb" src="bomb.png" style="width: 300px;">
-                    <button id="startButton" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" type="button" class="btn btn-success">Start</button>
-                    <h2><span id="randomLetters" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);display: none;" class="badge text-bg-secondary">--</span></h2>
-                </div>
-                <br>
-                <div class="input-group mb-3 custom-width">
-                    <input id="wordInput" type="text" class="form-control" placeholder="word" onkeyup="handleKeyPress(event)">
-                </div>      
-                <br>
-                <h1 id="scorecount" class="text-center">0</h1>
+    <div class="row">
+        <!-- scoreboard -->
+        <div id="scoreboard">
+            <h2>Highscores</h2>
+            <ul class="list-group" id="highscoreList">
+                <!-- list added by js -->
+            </ul>
             </div>
-
-            <!-- Settingsbar -->
-            <div id="settingsbar">
-                <h2>Settings</h2>
-                <p1>Fuse Time</p1><br>
-                <input type="range" value="5" min="1" max="15" oninput="this.nextElementSibling.value = this.value" id="fuseTime">
-                <output>5</output>
-
-                <label for="life_select">Amount of Lifes</label>
-                <select class="form-select" id="life_select">
-                    <option value="1">1</option>
-                    <option value="2" selected>2</option>
-                    <option value="3">3</option>
-                    <option value="6">6</option>
-                    <option value="9">9</option>
-                </select>
-
-                <label for="level_select">Difficulty</label>
-                <select class="form-select" id="level_select">
-                    <option value="1" selected>Easy</option>
-                    <option value="2">Hard</option>
-                </select>
+        
+        <!-- main content -->
+        <div id="mainGameContent" style="margin-top: 20vh;">
+            <div style="position: relative;"> <!-- so everything is overlapping nicely -->
+                <img id="bomb" src="bomb.png" style="width: 30vh; display: block; margin: auto;"> <!-- take up full width, center -->
+                <!-- centers top left according to parent and shifts half of own size -->
+                <button id="startButton" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" type="button" class="btn btn-success">Start</button> 
+                <h2><span id="randomLetters" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);display: none;" class="badge text-bg-secondary">--</span></h2>
             </div>
+                <input id="wordInput" type="text" class="form-control" placeholder="word" style="max-width: 25vh; margin: auto;" onkeyup="handleKeyPress(event)"> 
+            <br>
+            <h1 id="scorecount" class="text-center">0</h1>
+        </div>
+
+        <!-- settingsbar -->
+        <div id="settingsbar">
+            <h2>Settings</h2>
+            <label>Fuse Time</label>
+            <br>
+            <!---- https://stackoverflow.com/questions/10004723/html5-input-type-range-show-range-value ---->
+            <input type="range" value="5" min="1" max="15" oninput="this.nextElementSibling.value = this.value" id="fuseTime">
+            <output>5</output>
+             <!---- https://stackoverflow.com/questions/10004723/html5-input-type-range-show-range-value ---->
+
+            <label for="life_select">Amount of Lifes</label>
+            <select class="form-select" id="life_select">
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="6">6</option>
+                <option value="9">9</option>
+            </select>
+
+            <label for="level_select">Difficulty</label>
+            <select class="form-select" id="level_select">
+                <option value="1" selected>Easy</option>
+                <option value="2">Hard</option>
+            </select>
         </div>
     </div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

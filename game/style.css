@@ -1,8 +1,7 @@
 #scoreboard {
-  height: 100%;
+  height: 100%; /* always show */
   width: 250px;
   position: fixed;
-  top: 0;
   left: 0;
   background-color: #f4e5c6;
   padding-top: 15px;
@@ -10,22 +9,21 @@
 
 #settingsbar {
   position: fixed;
-  top: 0;
-  right: -250px; /* Initially hidden */
+  right: -250px; /* hide by positioning it too far to the right */
   width: 250px;
   height: 100%;
   background-color: #f8f9fa;
-  transition: all 0.3s;
+  transition: all 0.3s; /* slide animation */
 }
 
-#settingsbar.active {
-  right: 0; /* Display when active */
+#settingsbar.active { /* when id settingsbar also has the class active, will overwrite "right" */
+  right: 0;
 }
 
-#bomb { display: block; margin: auto; }
-
-.custom-width {
-  width: 10%;
-  max-width: 200px; /* Set a maximum width if needed */
-  margin: 0 auto; /* Center horizontally */
+#settingsbarToggle {
+  position: fixed; 
+  top: 10px; 
+  right: 260px
 }
+
+
