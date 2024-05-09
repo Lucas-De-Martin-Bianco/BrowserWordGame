@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Word Festival</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <style>
+        #scoreboard {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f4e5c6;
+            padding-top: 15px;
+        }
+        
+        #settingsbar {
+            position: fixed;
+            top: 0;
+            right: -250px; /* Initially hidden */
+            width: 250px;
+            height: 100%;
+            background-color: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        #settingsbar.active {
+            right: 0; /* Display when active */
+        }
+
+        #bomb { display: block; margin: auto; }
+
+        .custom-width {
+            width: 10%;
+            max-width: 200px; /* Set a maximum width if needed */
+            margin: 0 auto; /* Center horizontally */
+        }
+    </style>
+
+</head>
+<body>
+    <button id="settingsbarCollapse" class="btn btn-info" style="position: fixed; top: 10px; right: 260px">Settings</button>
+    <Label id="v_healthbar" style="position: fixed; top: 10px; left: 260px;font-size: 50px;">❤️x ?</Label>
+    
+    <div class="container-fluid">
+
+        <div class="row">
+            <!-- Scoreboard -->
+            <div class="col-3 sidebar" id="scoreboard">
+                <h2>Highscores</h2>
+                <ul class="list-group" id="highscoreList">
+                  <!-- Highscore items will be dynamically added here -->
+                </ul>
+              </div>
+          
+            <!-- Main Content -->
+            <div class="col" style="margin-top: 20vh;">
+                <div style="position: relative;">
+                    <img id="bomb" src="bomb.png" style="width: 300px;">
+                    <button id="startButton" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" type="button" class="btn btn-success">Start</button>
+                    <h2><span id="randomLetters" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);display: none;" class="badge text-bg-secondary">--</span></h2>
+                </div>
+                <br>
+                <div class="input-group mb-3 custom-width">
+                    <input id="wordInput" type="text" class="form-control" placeholder="word" onkeyup="handleKeyPress(event)">
+                </div>      
+                <br>
+                <h1 id="scorecount" class="text-center">0</h1>
+            </div>
+
+            <!-- Settingsbar -->
+            <div id="settingsbar">
+                <h2>Settings</h2>
+                <p1>Language</p1>
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" name="btnlang" id="btnlang1" autocomplete="off" disabled>
+                    <label class="btn btn-outline-primary" for="btnlang1">German</label>
+                  
+                    <input type="radio" class="btn-check" name="btnlang" id="btnlang2" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="btnlang2">English</label>
+                </div>
+                <br>
+                <p1>Fuse Time</p1><br>
+                <input type="range" value="5" min="1" max="15" oninput="this.nextElementSibling.value = this.value" id="fuseTime">
+                <output>5</output>
+
+                <label for="life_select">Amount of Lifes</label>
+                <select class="form-select" id="life_select">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                    <option value="6">6</option>
+                    <option value="9">9</option>
+                </select>
+
+                <label for="level_select">Difficulty</label>
+                <select class="form-select" id="level_select">
+                    <option value="1">Easy</option>
+                    <option value="2" selected>Hard</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //settingsbar
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get elements
+            var settingsbar = document.getElementById("settingsbar");
+            var toggleSettingsbar = document.getElementById("settingsbarCollapse");
+            // Toggle settingsbar on button click
+            toggleSettingsbar.addEventListener("click", function () {
+                if (settingsbar.classList.contains("active")) {
+                    settingsbar.classList.remove("active");
+                } else {
+                    settingsbar.classList.add("active");
+                }
+            });
+        });
+
+        // check for enter key and after check word
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) {
+                let wordInput = document.getElementById('wordInput');
+                checkForInclusion();
+            }
+        }
+        
+        //check for if word includes task
+        function checkWord() {
+            var word = document.getElementById('wordInput').value;
+            if (word.length > 0) {
+                    document.getElementById('wordInput').value = '';
+                    searching(word);
+            }
+        }
+        function searching(word) {
+            let url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+            fetch(url)
+            .then((response) => response.json())
+            .then((result) => checkingword(result,word))
+        }
+        function checkingword(result,word) {
+            if (result[0] && result[0].hasOwnProperty('word') && result[0].phonetics.length !== 0) {
+                resetTimer()
+                generateRandomLetters()
+                var wrongbuzzer = new Audio('coin_1.mp3');
+                wrongbuzzer.play();
+                document.getElementById("scorecount").textContent = parseInt(document.getElementById("scorecount").textContent) + 1
+            } 
+            else {
+                var wrongbuzzer = new Audio('wronganswer.mp3');
+                wrongbuzzer.play();
+                wordInput.value = '';
+            }
+        }
+        function sethealthbar() {
+            var v_healthbar = document.getElementById("v_healthbar");
+            var v_healthbar_text = v_healthbar.innerHTML;
+            v_healthbar.innerHTML = v_healthbar_text.substring(0, 4) + i_healthbar + v_healthbar_text.substring(5);
+        }
+
+        //gameplay logic
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the button elements
+            const wordInput = document.getElementById('wordInput');
+            const startButton = document.getElementById('startButton');
+            // Add click event listener to the start button
+            startButton.addEventListener('click', () => {
+                startButton.style.display = 'none';
+                document.getElementById("scorecount").textContent = 0;
+                generateRandomLetters()
+                document.getElementById('randomLetters').style.display = 'block';
+                i_healthbar = document.getElementById("life_select").value
+                sethealthbar();
+                document.getElementById('wordInput').disabled = false;
+                wordInput.value = '';
+                wordInput.focus();
+                //disable settings menu
+                if (settingsbar.classList.contains("active")) {
+                    settingsbar.classList.remove("active");
+                }
+                document.getElementById("settingsbarCollapse").disabled = true;
+                wordInput.focus(); //focus the textinput
+                //change png
+                document.getElementById('bomb').src = 'bomb_ticking.png';
+                resetTimer()
+            });
+        });
+
+        let countdown;
+        const fuseTimeInput = document.getElementById('fuseTime');
+
+        function resetTimer() {
+            clearInterval(countdown); // Stop the current countdown
+            let seconds = parseFloat(fuseTimeInput.value) + 0.25; // Get the new value and add 0.5
+            countdown = setInterval(function() {
+                seconds--;
+                if (seconds >= 1) {
+                    console.log(seconds);
+                } else {
+                    if (i_healthbar > 1) {
+                        i_healthbar = i_healthbar -1
+                        var wrongbuzzer = new Audio('minecraft_hit_soundmp3converter.mp3');
+                        wrongbuzzer.play();
+                        sethealthbar()
+                        generateRandomLetters()
+                        resetTimer()
+                    } else {
+                        document.getElementById('wordInput').disabled = true;
+                        i_healthbar = i_healthbar -1
+                        sethealthbar()
+                        clearInterval(countdown);
+                        //console.log("timer done");
+                        // Disable the input field
+                        // Clear the input field's value
+                        document.getElementById('wordInput').value = '';
+                        saveOrUpdateHighscores(document.getElementById("scorecount").textContent)
+                        console.log("Score: ",document.getElementById("scorecount").textContent)
+                        var explosion = new Audio('explosion.mp3');
+                        explosion.play();
+                        document.getElementById('bomb').src = 'bomb_explode.png';
+                        document.getElementById('randomLetters').style.display = 'none'
+                        document.getElementById("settingsbarCollapse").disabled = false;
+                        setTimeout(function() {
+                            document.getElementById('bomb').src = 'bomb_ticking.png';
+                            startButton.style.display = 'block';
+                        }, 2000);
+                    }   
+                }
+            }, 1000);
+        }
+
+        function generateRandomLetters() {
+            if (document.getElementById("level_select").value == 2) {
+            // Array of all letters
+            var letters = 'abcdefghijklmnopqrstuvwxyz';
+            // Generate random indexes
+            var index1 = Math.floor(Math.random() * letters.length);
+            var index2 = Math.floor(Math.random() * letters.length);
+            // Get random letters
+            var letter1 = letters.charAt(index1);
+            var letter2 = letters.charAt(index2);
+            // Display random letters
+            document.getElementById("randomLetters").innerHTML =letter1 + letter2;
+            } else {
+                var letters = 'abcdefghijklmnoprstuvwxyz'
+                var vowels = "aeiou"
+                var index1 = Math.floor(Math.random() * letters.length);
+                var index2 = Math.floor(Math.random() * vowels.length);
+                var letter1 = letters.charAt(index1);
+                var vowel2 = vowels.charAt(index2);
+                const e_taskorder = Math.random()
+                if (e_taskorder == 0) {
+                    document.getElementById("randomLetters").innerHTML =letter1 + vowel2;
+                } else {
+                    document.getElementById("randomLetters").innerHTML =vowel2 + letter1;
+                }
+            }
+        }
+        function checkForInclusion() {
+            // Get the input word
+            var word = document.getElementById("wordInput").value;
+            if (word.includes(document.getElementById("randomLetters").innerHTML)) {
+                checkWord();
+            } else {
+                var wrongbuzzer = new Audio('wronganswer.mp3');
+                wrongbuzzer.play();
+                wordInput.value = '';
+            }
+        }
+
+// Function to save highscores to local storage
+    // Function to save highscores to local storage
+    function saveHighscores(highscores) {
+        // Serialize the highscores data
+        var serializedHighscores = JSON.stringify(highscores);
+        
+        // Save to local storage
+        localStorage.setItem('highscores', serializedHighscores);
+    }
+
+    // Function to retrieve highscores from local storage
+    function getHighscores() {
+        // Retrieve highscores data from local storage
+        var serializedHighscores = localStorage.getItem('highscores');
+        
+        // Deserialize the highscores data
+        var highscores = JSON.parse(serializedHighscores);
+        
+        // Return the highscores
+        return highscores;
+    }
+
+    // Function to update the highscores list in the HTML
+    function updateHighscoresHTML() {
+        // Retrieve highscores from local storage
+        var highscores = getHighscores() || [];
+
+        // Select the <ul> element to populate with highscores
+        var highscoreList = document.getElementById('highscoreList');
+
+        // Clear existing content
+        highscoreList.innerHTML = '';
+
+        // Loop through highscores and add them to the list
+        highscores.forEach(function(score, index) {
+            // Create a new list item element
+            var listItem = document.createElement('li');
+            listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+            
+            // Set the content of the list item
+            listItem.textContent = `Streak: ${score}`;
+
+            // Append the list item to the highscore list
+            highscoreList.appendChild(listItem);
+        });
+    }
+    function saveOrUpdateHighscores(newHighscores) {
+    // Retrieve existing highscores from local storage
+    var existingHighscores = getHighscores() || [];
+
+    // Combine existing highscores with the new ones
+    var updatedHighscores = existingHighscores.concat(newHighscores);
+
+    // Sort the highscores in descending order
+    updatedHighscores.sort((a, b) => b - a);
+
+    // Take only the top 5 highscores
+    updatedHighscores = updatedHighscores.slice(0, 5);
+
+    // Save updated highscores to local storage
+    saveHighscores(updatedHighscores);
+}
+
+    // Initial update of highscores list when the page loads
+    updateHighscoresHTML();
+    </script>
+</body>
+</html>

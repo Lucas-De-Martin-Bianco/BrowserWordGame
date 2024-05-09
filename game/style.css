@@ -1,16 +1,13 @@
-/* style.css */
-
 #scoreboard {
-    height: 100%;
-    width: 250px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #f4e5c6;
-    padding-top: 15px;
-  }
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f4e5c6;
+  padding-top: 15px;
+}
 
-/* Custom styles for the sidebar */
 #settingsbar {
   position: fixed;
   top: 0;
@@ -25,9 +22,7 @@
   right: 0; /* Display when active */
 }
 
-#bomb {display: block; margin: auto;} 
-#fuse {display: block; margin: auto;}
-#word {display: block; margin: auto;}
+#bomb { display: block; margin: auto; }
 
 .custom-width {
   width: 10%;
